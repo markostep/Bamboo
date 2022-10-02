@@ -1,0 +1,16 @@
+{
+    "web": {
+        "favicon": "./assets/images/favicon.png",
+        "config": {
+          "firebase": {
+            "apiKey": "AIzaSyD4awCBjZR4LEh0M-KY6AglQd40xkPyHc4",
+            "authDomain": "bamboo-52389.firebaseapp.com",
+            "projectId": "bamboo-52389",
+            "storageBucket": "bamboo-52389.appspot.com",
+            "messagingSenderId": "621289799440",
+            "appId": "1:621289799440:web:f4e572ef06c132edbcaf95",
+            "measurementId": "G-GQDWMTNYV8"
+          }
+        }
+      }
+}
