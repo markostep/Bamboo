@@ -82,7 +82,7 @@ def update_book():
         fields['tech'] = fields.get('tech', 'any')
         fields['price'] = fields.get('price', MIN_SELL if fields['order'] == 'sell' else MAX_BUY)
 
-        if fields['tech'] == 'any':
+        if fields['tech'] == 'any' and fields['order'] == 'buy':
             for tech in ['dr', 'beecs']:
                 ref = eval('_'.join(['monthly' if fields['monthly'] else 'onetime', tech, fields['order']]) + '_book')
                 add({order_id: fields}, ref)
@@ -198,9 +198,9 @@ dummy_buys = {
 # key is unique identifier for the order
 # values: tech used (default to tech from seller profile), tons, price (if limit order), order type, monthly (False if one-time), identifier of the company
 dummy_sells = {
-    5930: {'order': 'sell', 'tech': 'any', 'tons': 300, 'type': 'limit', 'price': 49, 'monthly': True, 'company_id': '6442'},
-    1849: {'order': 'sell', 'tech': 'any', 'tons': 2500, 'type': 'market', 'monthly': False, 'company_id': '1340'},
-    2820: {'order': 'sell', 'tech': 'any', 'tons': 1000, 'type': 'limit', 'price': 58, 'monthly': False, 'company_id': '1305'},
+    5930: {'order': 'sell', 'tech': 'Direct Removal', 'tons': 300, 'type': 'limit', 'price': 49, 'monthly': True, 'company_id': '6442'},
+    1849: {'order': 'sell', 'tech': 'Direct Removal', 'tons': 2500, 'type': 'market', 'monthly': False, 'company_id': '1340'},
+    2820: {'order': 'sell', 'tech': 'Direct Removal', 'tons': 1000, 'type': 'limit', 'price': 58, 'monthly': False, 'company_id': '1305'},
     6931: {'order': 'sell', 'tech': 'Direct Removal', 'tons': 3894, 'type': 'limit', 'price': 52, 'monthly': True, 'company_id': '9083'},
     4920: {'order': 'sell', 'tech': 'Direct Removal', 'tons': 13, 'type': 'market', 'monthly': False, 'company_id': '123904'},
     4892: {'order': 'sell', 'tech': 'Direct Removal', 'tons': 453, 'type': 'market', 'monthly': True, 'company_id': '1654'},
@@ -210,7 +210,7 @@ dummy_sells = {
 }
 
 #monthly>dr>buy>6930
-add({str(key): dummy_buys.get(key, None) or dummy_sells.get(key, None) for key in list(dummy_buys.keys())+list(dummy_sells.keys())}, new_listings)
+# add({str(key): dummy_buys.get(key, None) or dummy_sells.get(key, None) for key in list(dummy_buys.keys())+list(dummy_sells.keys())}, new_listings)
 engine()
 
 # for x in [1849, 3850, 4230, 4892, 5838, 5930, 5931, 6930, 6931]:

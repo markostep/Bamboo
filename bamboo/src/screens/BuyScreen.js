@@ -1,4 +1,12 @@
 import React from 'react';
+
+import { getDatabase, ref, onValue, set, child, remove, get} from 'firebase/database';
+// import { initializeApp } from 'firebase/app';
+// import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
+
+
 //import List from '@mui/material/List';
 //import ListItem from '@mui/material/ListItem';
 //import ListItemButton from '@mui/material/ListItemButton';
@@ -12,6 +20,106 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 function renderRow(props) {
   const { index, style } = props;
 
+
+
+const [buyList, sellList] = React.useState({})
+const dbRef = ref(getDatabase());
+get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+    get(child(dbRef, `books/monthly/direct_removal/buy`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+    get(child(dbRef, `books/onetime/beecs/buy`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+    get(child(dbRef, `books/onetime/direct_removal/buy`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+    get(child(dbRef, `books/monthly/beecs/sell`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+    get(child(dbRef, `books/monthly/direct_removal/sell`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+    get(child(dbRef, `books/onetime/beecs/sell`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+    get(child(dbRef, `books/onetime/direct_removal/sell`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        // setUserData(snapshot.val())
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+
+
+
+
+
+
   return (
     <ListItem style={style} key={index} component="div" disablePadding>
       <ListItemButton style={{height: 200}} onClick={() => {console.log('clicked')}}>
@@ -20,6 +128,7 @@ function renderRow(props) {
     </ListItem>
   );
 }
+
 
 const list = [
     'Company 1',
