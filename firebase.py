@@ -1,6 +1,8 @@
 from firebase_admin import credentials, initialize_app, db
 import random
 import collections
+import backend
+
 
 cred = credentials.Certificate("./bamboo-52389-firebase-adminsdk-jdph1-b1ff97c2b8.json")
 default_app = initialize_app(cred, {'databaseURL': 'https://bamboo-52389-default-rtdb.firebaseio.com/'})
@@ -27,6 +29,9 @@ onetime_beecs_sell_book = db.reference('/books/onetime/beecs/sell')
 
 all_books = [monthly_dr_buy_book, monthly_dr_sell_book, monthly_beecs_buy_book, monthly_beecs_sell_book, onetime_dr_buy_book, onetime_dr_sell_book, onetime_beecs_buy_book, onetime_beecs_sell_book]
 all_books_paired = [(monthly_dr_buy_book, monthly_dr_sell_book), (monthly_beecs_buy_book, monthly_beecs_sell_book), (onetime_dr_buy_book, onetime_dr_sell_book), (onetime_beecs_buy_book, onetime_beecs_sell_book)]
+
+new_footprints = db.reference('/uncalculated_emissions/')
+users = db.reference('/users/')
 
 
 def overwrite(data, ref=head):
@@ -154,6 +159,15 @@ def update_book():
             ref = eval('_'.join(['monthly' if fields['monthly'] else 'onetime', 'dr' if fields['tech'] == 'Direct Removal' else 'beecs', fields['order']]) + '_book')
             add({order_id: fields}, ref)
 
+        add({order_id:
+                dict({
+                    'monthly': fields['monthly'],
+                    'tons': fields['tons'],
+                    'tech': fields['tech'],
+                    'type': fields['type']
+                }, **({'price': fields['price']} if fields['type'] == 'limit' else {}))
+            }, db.reference('/companies/{}/{}/open_orders/'.format(fields['order'].capitalize()+'er', fields['company_id'])))
+
         remove(order_id, new_listings)
 
 
@@ -163,7 +177,7 @@ def engine():
     '''
     if get(new_listings):
         update_book()
-        return
+
 
     for buy_book, sell_book in all_books_paired:
         buys,sells = get(buy_book, sort_by='price', descending=True), get(sell_book, sort_by='price')
@@ -191,21 +205,25 @@ def engine():
                 if curr_buy['tons'] <= curr_sell['tons']:
                     executed_tons = curr_buy['tons']
                     remove(buy_id, buy_book)
+                    remove(buy_id, db.reference('/companies/Buyer/{}/open_orders/'.format(curr_buy['company_id'])))
                     update(sell_id, {'tons': curr_sell['tons'] - executed_tons}, sell_book)
+                    update(sell_id, {'tons': curr_sell['tons'] - executed_tons}, db.reference('/companies/Seller/{}/open_orders/'.format(curr_sell['company_id'])))
                     i += 1
                 if curr_buy['tons'] >= curr_sell['tons']:
                     executed_tons = curr_sell['tons']
                     remove(sell_id, sell_book)
+                    remove(sell_id, db.reference('/companies/Seller/{}/open_orders/'.format(curr_sell['company_id'])))
                     if curr_buy['tons'] != curr_sell['tons']:
                         update(buy_id, {'tons': curr_buy['tons'] - executed_tons}, buy_book)
+                        update(buy_id, {'tons': curr_buy['tons'] - executed_tons}, db.reference('/companies/Buyer/{}/open_orders/'.format(curr_buy['company_id'])))
                     j += 1
 
 
-                buy_data = {'monthly': curr_buy['monthly'], 'price': executed_price, 'tons': executed_tons,
-                            # 'order': curr_buy['order'], 'tech': curr_buy['tech'],
+                buy_data = {'monthly': curr_buy['monthly'], 'price': executed_price, 'tons': executed_tons, 'tech': curr_buy['tech'],
+                            # 'order': curr_buy['order'],
                             }
-                sell_data = {'monthly': curr_sell['monthly'], 'price': executed_price, 'tons': executed_tons,
-                            # 'order': curr_sell['order'], 'tech': curr_sell['tech'],
+                sell_data = {'monthly': curr_sell['monthly'], 'price': executed_price, 'tons': executed_tons, 'tech': curr_sell['tech'],
+                            # 'order': curr_sell['order'],
                             }
 
                 add({'last_price': executed_price}, books)
@@ -240,13 +258,41 @@ def engine():
 
 
 
+def calc_emissions():
+    for user, data in get(new_footprints).items():
+        count = 0
+        footprints = get(db.reference(f'/users/{user}/footprints/'))
+        for footprint in footprints:
+            if footprint == 'total_footprint':
+                continue
+            if footprints[footprint]['type'] == 'Electricity':
+                count += backend.elec(footprints[footprint]['amount'], state=footprints[footprint]['state'], unit=footprints[footprint]['units'])
+            elif footprints[footprint]['type'] == 'Flight':
+                legs = [(footprints[footprint]['start'], footprints[footprint]['end']),] + ([(footprints[footprint]['end'], footprints[footprint]['start'])] if footprints[footprint]['round_trip'] else [])
+                count += backend.flight(legs, num_passengers=footprints[footprint]['num_passengers'])
+            elif footprints[footprint]['type'] == 'Shipping':
+                count += backend.shipping(footprints[footprint]['weight'], footprints[footprint]['distance'],
+                                        footprints[footprint]['transport_method'].lower(),
+                                        # footprints[footprint]['weight_units'], footprints[footprint]['distance_units']
+                                        )
+            elif footprints[footprint]['type'] == 'Driving':
+                count += backend.vehicle(footprints[footprint]['distance'], footprints[footprint]['make'],
+                                       footprints[footprint]['model'], int(footprints[footprint]['year']),
+                                       # footprints[footprint]['distance_units']
+                                       )
+            elif footprints[footprint]['type'] == 'Fuel Combustion':
+                #fuel_source_value, fuel_source_type='pg', fuel_source_unit
+                count += backend.fuel(int(footprints[footprint]['amount']),
+                                      # footprints[footprint]['type'], footprints[footprint]['units']
+                                      )
 
+        # update('footprints', {'total_footprint': footprints.get('total_footprint', 0) + count}, db.reference(f'/users/{user}/'))
+        add({'total_footprint': count}, db.reference(f'/users/{user}/footprints/'))
+    remove('uncalculated_emissions', head)
 
 
 # for x,y in get(new_listings, sort_by='price').items():
 #     print(x, ':\t', y.get('price', float('-inf')), sep='')
-
-
 
 # key is unique identifier for the order
 # values: desired tech (or 'any'), tons, price (if limit order), order type, monthly (False if one-time), identifier of the company
@@ -276,9 +322,23 @@ dummy_sells = {
     5931: {'order': 'sell', 'tech': 'BEECS', 'tons': 139, 'type': 'limit', 'price': 125, 'monthly': True, 'company_id': '38104'}
 }
 
+
+
+
+# engine()
+calc_emissions()
+
+
+
+
+
+
+
+
+
 #monthly>dr>buy>6930
 # add({str(key): dummy_buys.get(key, None) or dummy_sells.get(key, None) for key in list(dummy_buys.keys())+list(dummy_sells.keys())}, new_listings)
-engine()
+
 
 # for x in [1849, 3850, 4230, 4892, 5838, 5930, 5931, 6930, 6931]:
 #     remove(str(x))

@@ -87,7 +87,8 @@ def vehicle(distance_value, make, model, year, distance_unit='mi', tons=True):
             break
 
     if 'model_id' not in vars():
-        raise RuntimeError(f'{make} {model} {year} not in database')
+        print(f'WARNING: {make} {model} {year} NOT IN DATABASE')
+        return 0
 
     data = {
         "type": "vehicle",
@@ -131,4 +132,4 @@ def fuel(fuel_source_value, fuel_source_type='pg', fuel_source_unit='gallon', to
 #     requests.post(f"https://www.carboninterface.com/api/v1/carbon_ledger/programs/{card_program_uuid}/card_profiles", json=data, headers=headers)
 
 
-card_profile('vegan', 'public_transport')
+# card_profile('vegan', 'public_transport')

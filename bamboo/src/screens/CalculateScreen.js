@@ -17,17 +17,506 @@ import { auth, logInWithEmailAndPassword, signInWithGoogle, db, logout, register
 import { useAuthState } from "react-firebase-hooks/auth";
 
 
-// const technologies = [
-//     {
-//       value: 'Direct Removal',
-//       label: 'Direct Removal',
-//     },
-//     {
-//       value: 'BEECS',
-//       label: 'BEECS',
-//     },
-//   ];
 
+
+
+// Fuel Combustion
+function CalculateScreen({setActiveProfileIndex}) {
+    const [userData, setUserData] = React.useState({})
+
+    const [user, loading, error] = useAuthState(auth);
+
+    const dbRef = ref(getDatabase());
+    console.log(user?.uid)
+    get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        //setName(snapshot.val().name)
+        setUserData(snapshot.val())
+        //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+
+    const [values, setValues] = React.useState({
+        amount: 0,
+      });
+
+      const [activeIndex, setActiveIndex] = React.useState(0);
+
+      const handleChange =
+    (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+    React.useEffect(() => {
+        if (loading) return;
+        //fetchUserName();
+
+      }, [user, loading]);
+
+    return (
+        <>
+        {activeIndex == 0 &&
+    <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
+    <div style={{backgroundColor: 'white', width: '100%'}}>
+        <header style={{justifyContent: 'flex-start'}}>
+        <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+        </div>
+        </header>
+      </div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
+      <div>
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Amount</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="amount">Gallons of Propane</InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Location"
+          />
+        </FormControl>
+      </div>
+    </Box>
+    <Button variant="contained"
+    color="primary"
+    style={{marginTop: 50}}
+    onClick={() => {
+    const db = getDatabase();
+    const hash = uuid()
+    values.type = 'Fuel Combustion'
+    var reference = ref(db, 'users/' + user.uid + '/footprints/' + hash);
+    set(reference, values);
+    reference = ref(db, '/uncalculated_emissions/' + user.uid);
+    set(reference, {'0':hash});
+    setValues({
+        amount: 0
+      })
+   }}>{'Submit'}</Button>
+    </div>}
+    </>
+    );
+  }
+
+  export default CalculateScreen;
+
+
+
+
+
+
+/*
+// Driving
+function CalculateScreen({setActiveProfileIndex}) {
+    const [userData, setUserData] = React.useState({})
+
+    const [user, loading, error] = useAuthState(auth);
+
+    const dbRef = ref(getDatabase());
+    console.log(user?.uid)
+    get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        //setName(snapshot.val().name)
+        setUserData(snapshot.val())
+        //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+
+    const [values, setValues] = React.useState({
+        distance: 0,
+        make: '',
+        model: '',
+        year: ''
+      });
+
+      const [activeIndex, setActiveIndex] = React.useState(0);
+
+      const handleChange =
+    (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+    React.useEffect(() => {
+        if (loading) return;
+        //fetchUserName();
+
+      }, [user, loading]);
+
+    return (
+        <>
+        {activeIndex == 0 &&
+    <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
+    <div style={{backgroundColor: 'white', width: '100%'}}>
+        <header style={{justifyContent: 'flex-start'}}>
+        <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+        </div>
+        </header>
+      </div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
+      <div>
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Make</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="make"></InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.make}
+            onChange={handleChange('make')}
+            label="Location"
+          />
+        </FormControl>
+        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Model</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="model"></InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.model}
+            onChange={handleChange('model')}
+            label="Location"
+          />
+        </FormControl>
+        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Year</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="year"></InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.year}
+            onChange={handleChange('year')}
+            label="Location"
+          />
+        </FormControl>
+      </div>
+      <div>
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Distance</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="distance">miles</InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.distance}
+            onChange={handleChange('distance')}
+            label="Location"
+          />
+        </FormControl>
+        </div>
+    </Box>
+    <Button variant="contained"
+    color="primary"
+    style={{marginTop: 50}}
+    onClick={() => {
+    const db = getDatabase();
+    const hash = uuid()
+    values.type = 'Driving'
+    var reference = ref(db, 'users/' + user.uid + '/footprints/' + hash);
+    set(reference, values);
+    reference = ref(db, '/uncalculated_emissions/' + user.uid);
+    set(reference, {'0':hash});
+    setValues({
+        distance: 0,
+        make: '',
+        model: '',
+        year: ''
+      })
+   }}>{'Submit'}</Button>
+    </div>}
+    </>
+    );
+  }
+
+  export default CalculateScreen;
+*/
+
+
+
+
+
+
+/*
+// Shipping
+function CalculateScreen({setActiveProfileIndex}) {
+    const [userData, setUserData] = React.useState({})
+
+    const [user, loading, error] = useAuthState(auth);
+
+    const dbRef = ref(getDatabase());
+    console.log(user?.uid)
+    get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        //setName(snapshot.val().name)
+        setUserData(snapshot.val())
+        //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+
+    const [values, setValues] = React.useState({
+        weight: 0,
+        distance: 0,
+        transport_method: 'Truck'
+      });
+
+      const [activeIndex, setActiveIndex] = React.useState(0);
+
+      const handleChange =
+    (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+    React.useEffect(() => {
+        if (loading) return;
+        //fetchUserName();
+
+      }, [user, loading]);
+
+    return (
+        <>
+        {activeIndex == 0 &&
+    <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
+    <div style={{backgroundColor: 'white', width: '100%'}}>
+        <header style={{justifyContent: 'flex-start'}}>
+        <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+        </div>
+        </header>
+      </div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
+      <div>
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+          <InputLabel>{'Weight'}</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="weight">lbs</InputAdornment>}
+            id="outlined-adornment-location"
+            value={values.weight}
+            onChange={handleChange('weight')}
+            label="Location"
+          />
+      </FormControl>
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Distance</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="distance">miles</InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.distance}
+            onChange={handleChange('distance')}
+            label="Location"
+          />
+        </FormControl>
+        <TextField
+            style={{width: values.type=='limit' ? '25ch' : '51ch', marginTop: 16, alignSelf: 'center'}}
+          id="outlined-select-currency"
+          select
+          label="Transport Method"
+          value={values.transport_method}
+          onChange={handleChange('transport_method')}
+        >
+            <MenuItem key={"Truck"} value={'truck'}>
+              {"Truck"}
+            </MenuItem>
+            <MenuItem key={"Ship"} value={'ship'}>
+              {"Ship"}
+            </MenuItem>
+            <MenuItem key={"Train"} value={'train'}>
+              {"Train"}
+            </MenuItem>
+            <MenuItem key={"Plane"} value={'plane'}>
+              {"Plane"}
+            </MenuItem>
+        </TextField>
+        </div>
+    </Box>
+    <Button variant="contained"
+    color="primary"
+    style={{marginTop: 50}}
+    onClick={() => {
+    const db = getDatabase();
+    const hash = uuid()
+    values.type = 'Shipping'
+    var reference = ref(db, 'users/' + user.uid + '/footprints/' + hash);
+    set(reference, values);
+    reference = ref(db, '/uncalculated_emissions/' + user.uid);
+    set(reference, {'0':hash});
+    setValues({
+        weight: 0,
+        distance: 0,
+        transport_method: 'Truck'
+      })
+   }}>{'Submit'}</Button>
+    </div>}
+    </>
+    );
+  }
+
+  export default CalculateScreen;
+*/
+
+
+
+
+
+
+
+
+
+/*
+// Flights
+function CalculateScreen({setActiveProfileIndex}) {
+    const [userData, setUserData] = React.useState({})
+
+    const [user, loading, error] = useAuthState(auth);
+
+    const dbRef = ref(getDatabase());
+    console.log(user?.uid)
+    get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        //setName(snapshot.val().name)
+        setUserData(snapshot.val())
+        //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+
+    const [values, setValues] = React.useState({
+        start: '',
+        end: '',
+        round_trip: 'No',
+        num_passengers: 1
+      });
+
+      const [activeIndex, setActiveIndex] = React.useState(0);
+
+      const handleChange =
+    (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+    React.useEffect(() => {
+        if (loading) return;
+        //fetchUserName();
+
+      }, [user, loading]);
+
+    return (
+        <>
+        {activeIndex == 0 &&
+    <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
+    <div style={{backgroundColor: 'white', width: '100%'}}>
+        <header style={{justifyContent: 'flex-start'}}>
+        <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+        </div>
+        </header>
+      </div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
+      <div>
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+          <InputLabel>{'Departure Airport'}</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="start"></InputAdornment>}
+            id="outlined-adornment-location"
+            value={values.start}
+            onChange={handleChange('start')}
+            label="Location"
+          />
+      </FormControl>
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Destination Airport</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="start"></InputAdornment>}
+            id="outlined-adornment-name"
+            value={values.end}
+            onChange={handleChange('end')}
+            label="Location"
+          />
+        </FormControl>
+        <TextField
+            style={{width: values.type=='limit' ? '25ch' : '51ch', marginTop: 16, alignSelf: 'center'}}
+          id="outlined-select-currency"
+          select
+          label="Round trip?"
+          value={values.round_trip}
+          onChange={handleChange('round_trip')}
+        >
+            <MenuItem key={"Yes"} value={true}>
+              {"Yes"}
+            </MenuItem>
+            <MenuItem key={"No"} value={false}>
+              {"No"}
+            </MenuItem>
+        </TextField>
+        </div>
+        <div>
+        <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+          <InputLabel>{'Number of Passengers'}</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="start"></InputAdornment>}
+            id="outlined-adornment-location"
+            value={values.num_passengers}
+            onChange={handleChange('num_passengers')}
+            label="Location"
+          />
+        </FormControl>
+        </div>
+    </Box>
+    <Button variant="contained"
+    color="primary"
+    style={{marginTop: 50}}
+    onClick={() => {
+    const db = getDatabase();
+    const hash = uuid()
+    values.type = 'Flight'
+    var reference = ref(db, 'users/' + user.uid + '/footprints/' + hash);
+    set(reference, values);
+    reference = ref(db, '/uncalculated_emissions/' + user.uid);
+    set(reference, {'0':hash});
+    setValues({
+        start: '',
+        end: '',
+        round_trip: 'No',
+        num_passengers: 1
+      })
+   }}>{'Submit'}</Button>
+    </div>}
+    </>
+    );
+  }
+
+  export default CalculateScreen;
+*/
+
+
+
+
+
+
+
+
+/*
+// Electricity
 function CalculateScreen({setActiveProfileIndex}) {
 
     const [userData, setUserData] = React.useState({})
@@ -38,7 +527,7 @@ function CalculateScreen({setActiveProfileIndex}) {
     console.log(user?.uid)
     get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
-        console.log(snapshot.val());
+        //console.log(snapshot.val());
         //setName(snapshot.val().name)
         setUserData(snapshot.val())
         //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
@@ -87,7 +576,7 @@ function CalculateScreen({setActiveProfileIndex}) {
       <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
           <InputLabel>{'State'}</InputLabel>
           <OutlinedInput
-          endAdornment={<InputAdornment position="start">State</InputAdornment>}
+          endAdornment={<InputAdornment position="start"></InputAdornment>}
             id="outlined-adornment-location"
             value={values.state}
             onChange={handleChange('state')}
@@ -95,7 +584,7 @@ function CalculateScreen({setActiveProfileIndex}) {
           />
       </FormControl>
       <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel>Company Name</InputLabel>
+          <InputLabel>Country</InputLabel>
           <OutlinedInput
           disabled
             id="outlined-adornment-name"
@@ -142,8 +631,7 @@ function CalculateScreen({setActiveProfileIndex}) {
   }
 
   export default CalculateScreen;
-
-
+*/
 
 
 
@@ -167,6 +655,7 @@ function CalculateScreen({setActiveProfileIndex}) {
 
 
 /*
+// Old code
 import React from 'react';
 import { getDatabase, ref, onValue, set, child, remove} from 'firebase/database';
 import Box from '@mui/material/Box';
