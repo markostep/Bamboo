@@ -1,4 +1,173 @@
 import React from 'react';
+import { getDatabase, ref, onValue, set, child, remove, get} from 'firebase/database';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import FilledInput from '@mui/material/FilledInput';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button'
+import uuid from 'react-uuid';
+import { auth, logInWithEmailAndPassword, signInWithGoogle, db, logout, registerWithEmailAndPassword, sendPasswordReset  } from "../components/utils/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+
+// const technologies = [
+//     {
+//       value: 'Direct Removal',
+//       label: 'Direct Removal',
+//     },
+//     {
+//       value: 'BEECS',
+//       label: 'BEECS',
+//     },
+//   ];
+
+function CalculateScreen({setActiveProfileIndex}) {
+
+    const [userData, setUserData] = React.useState({})
+
+    const [user, loading, error] = useAuthState(auth);
+
+    const dbRef = ref(getDatabase());
+    console.log(user?.uid)
+    get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+        console.log(snapshot.val());
+        //setName(snapshot.val().name)
+        setUserData(snapshot.val())
+        //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
+    } else {
+        console.log("No data available");
+    }
+    }).catch((error) => {
+    console.error(error);
+    });
+
+
+
+    const [values, setValues] = React.useState({
+        amount: 0,
+        units: 'mwh',
+        state: '',
+        country: 'USA'
+      });
+
+      const [activeIndex, setActiveIndex] = React.useState(0);
+
+      const handleChange =
+    (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+    React.useEffect(() => {
+        if (loading) return;
+        //fetchUserName();
+
+      }, [user, loading]);
+
+    return (
+        <>
+        {activeIndex == 0 &&
+    <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
+    <div style={{backgroundColor: 'white', width: '100%'}}>
+        <header style={{justifyContent: 'flex-start'}}>
+        <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+        </div>
+        </header>
+      </div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
+      <div>
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+          <InputLabel>{'State'}</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="start">State</InputAdornment>}
+            id="outlined-adornment-location"
+            value={values.state}
+            onChange={handleChange('state')}
+            label="Location"
+          />
+      </FormControl>
+      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+          <InputLabel>Company Name</InputLabel>
+          <OutlinedInput
+          disabled
+            id="outlined-adornment-name"
+            value="USA"
+            onChange={handleChange('country')}
+            label="Location"
+          />
+        </FormControl>
+        </div>
+        <div>
+        <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+          <InputLabel>{'Amount'}</InputLabel>
+          <OutlinedInput
+          endAdornment={<InputAdornment position="start">Mwh</InputAdornment>}
+            id="outlined-adornment-location"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Location"
+          />
+        </FormControl>
+        </div>
+    </Box>
+    <Button variant="contained"
+    color="primary"
+    style={{marginTop: 50}}
+    onClick={() => {
+    const db = getDatabase();
+    const hash = uuid()
+    values.type = 'Electricity'
+    var reference = ref(db, 'users/' + user.uid + '/footprints/' + hash);
+    set(reference, values);
+    reference = ref(db, '/uncalculated_emissions/' + user.uid);
+    set(reference, {uid:hash});
+    setValues({
+        amount: 0,
+        units: 'mwh',
+        state: '',
+        country: 'USA'
+      })
+   }}>{'Submit'}</Button>
+    </div>}
+    </>
+    );
+  }
+
+  export default CalculateScreen;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+import React from 'react';
 import { getDatabase, ref, onValue, set, child, remove} from 'firebase/database';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -180,3 +349,4 @@ function CalculateScreen() {
   }
   
   export default CalculateScreen;
+*/
