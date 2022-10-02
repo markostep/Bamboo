@@ -299,7 +299,7 @@ function HistoryScreen({filledSelected}) {
       
         return (
             <>
-            { loaded && loaded2 && loaded3 && filledSelected &&
+            { filledSelected &&
           <ListItem style={style} key={index} component="div" disablePadding>
             <ListItemButton style={{height: 150}} onClick={() => {console.log('clicked')}}>
                 <div style={{ justifyContent: 'left', width: '80%', alignSelf: 'flex-start', marginLeft: 20}}>
@@ -325,7 +325,7 @@ function HistoryScreen({filledSelected}) {
               
             </ListItemButton>
           </ListItem>} 
-          { loaded && loaded2 && loaded3 && !filledSelected &&
+          { !filledSelected &&
           <ListItem style={style} key={index} component="div" disablePadding>
             <ListItemButton style={{height: 150, display: 'flex'}} onClick={() => {console.log('clicked')}}>
                 <div style={{ justifyContent: 'center', width: '80%', alignSelf: 'flex-start', marginLeft: 20}}>
