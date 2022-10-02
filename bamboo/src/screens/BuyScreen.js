@@ -15,6 +15,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { auth, logInWithEmailAndPassword, signInWithGoogle, db, logout, registerWithEmailAndPassword, sendPasswordReset  } from "../components/utils/firebase";
+import { GiBamboo } from "react-icons/gi";
 
 //import {usePostData} from '../components/utils/postData'
 
@@ -287,16 +288,41 @@ function BuyScreen() {
       
         return (
           <ListItem style={style} key={index} component="div" disablePadding>
-            <ListItemButton style={{height: 200}} onClick={() => {console.log('clicked')}}>
-                <h3 style={{color: 'black'}}>
+            <ListItemButton style={{height: 300}} onClick={() => {console.log('clicked')}}>
+                <div style={{ justifyContent: 'left', width: '80%', alignSelf: 'flex-start', marginLeft: 20}}>
+                <div style={{flexDirection: 'row', display: 'flex'}}>
+                <h3 style={{color: 'black', marginBottom: -20}}>
                 {`${companies?.Seller[list[index]?.company_id]?.companyName}`}
                 </h3>
-                <p style={{color: 'gray', fontSize: 20}}>{list[index]?.price}</p>
-                <p>{list[index]?.monthly}</p>
-                <p>{list[index]?.type}</p>
-                <p>{list[index]?.tons}</p>
-                <p>{list[index]?.tech}</p>
-                <ListItemText style={{color: 'black'}} primary={`Carbon Company ${list[index]?.company_id}`} />
+                <h3 style={{color: 'gray', marginBottom: -20}}>
+                {', ' + companies?.Seller[list[index]?.company_id]?.location}
+                </h3>
+                </div>
+                <h3 style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{list[index]?.tech != 'any' ? list[index]?.tech : "Any Technology"}</h3>
+                <h3 style={{color: 'gray', fontSize: 30}}>{list[index]?.monthly ? 'Monthly Contract' : 'One-time Contract'}</h3>
+                {list[index]?.rating &&
+                <>
+                <h3 style={{color: '#02cf73', display: 'flex', marginRight: 10}}>{Math.round(list[index]?.rating * 10) / 10} <GiBamboo size={40} color='#02cf73' style={{alignSelf: 'flex-end', display: 'flex'}}></GiBamboo></h3>
+                
+                </>}
+                </div>
+
+
+
+                <div style={{ justifyContent: 'right', width: '50%', alignSelf: 'flex-start', marginTop: 10}}>
+                <p style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{list[index]?.type == 'limit' ? 'Limit Order' : 'Market Order'}</p>
+                <p style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{list[index]?.tons + ' tons/yr'}</p>
+                {list[index]?.type == 'limit' && <p style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{'$' + list[index]?.price + '/ton'}</p>}
+                </div>
+
+                
+
+                <div style={{ justifyContent: 'right', width: '50%', alignSelf: 'flex-start', marginTop: 35}}>
+                <p style={{color: 'gray', fontSize: 20}}>
+                    {companies?.Seller[list[index]?.company_id]?.description ? companies?.Seller[list[index]?.company_id]?.description : "This company hasn't added a description yet!"}
+                </p>
+                </div>
+                {/*<ListItemText style={{color: 'black'}} primary={`Carbon Company ${list[index]?.company_id}`} />*/}
               
               
             </ListItemButton>
@@ -317,10 +343,10 @@ function BuyScreen() {
         
         <FixedSizeList
         header
-        height={910}
-        style={{marginLeft: '25%'}}
-        width={'50%'}
-        itemSize={200}
+        height={907}
+        style={{marginLeft: '0%'}}
+        width={'100%'}
+        itemSize={300}
         itemCount={list.length}
         overscanCount={5}
       >

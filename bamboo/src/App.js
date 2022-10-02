@@ -19,7 +19,7 @@ import ListingScreen from './screens/ListingScreen';
 import PurchaseScreen from './screens/PurchaseScreen';
 
 function App() {
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = React.useState(0);
   const [seachBarValue, setSearchBarValue] = React.useState("");
 
   const handleChange = (event) => {
@@ -53,7 +53,7 @@ function App() {
               setValue(newValue);
             }}
             >
-              <Tab label="Buy"/>
+              <Tab label="Browse"/>
               <Tab label="Purchase"/>
               <Tab label="Sell"/>
               <Tab label="Calculate"/>
