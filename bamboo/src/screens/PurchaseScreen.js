@@ -28,7 +28,7 @@ const technologies = [
     },
   ];
   
-function ListingScreen({setActiveProfileIndex}) {
+function PurchaseScreen({setActiveProfileIndex}) {
 
     const [userData, setUserData] = React.useState({})
 
@@ -56,7 +56,7 @@ function ListingScreen({setActiveProfileIndex}) {
         tons: 0,
         price: 0,
         type: 'market',
-        order: 'sell',
+        order: 'buy',
         monthly: false,
         company_id: ''
       });
@@ -81,70 +81,31 @@ function ListingScreen({setActiveProfileIndex}) {
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
         <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
-          <h3 style={{color: 'gray'}}>Create your listing here</h3>
+          <h3 style={{color: 'gray', width: '100%'}}>Place your purchase here</h3>
         </div>
         </header>
       </div>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
-      <div>
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel>Company Name</InputLabel>
-          <OutlinedInput
-          disabled
-            id="outlined-adornment-name"
-            value={userData?.companyData?.companyName}
-            onChange={handleChange('companyName')}
-            label="Company Name"
-          />
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel>Location</InputLabel>
-          <OutlinedInput
-          disabled
-            id="outlined-adornment-location"
-            value={userData?.companyData?.location}
-            onChange={handleChange('location')}
-            label="Location"
-          />
-        </FormControl>
-        </div>
         <div>
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel>Technology</InputLabel>
-          <OutlinedInput
-          disabled
-            id="outlined-adornment-name"
-            value={userData?.companyData?.technology}
-            onChange={handleChange('companyName')}
-            label="Company Name"
-          />
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel>{'Reserves'}</InputLabel>
-          <OutlinedInput
-          disabled
-          endAdornment={<InputAdornment position="start">tons/yr</InputAdornment>}
-            id="outlined-adornment-location"
-            value={userData?.companyData?.reserves}
-            onChange={handleChange('location')}
-            label="Location"
-          />
-        </FormControl>
-        </div>
-        <FormControl sx={{ m: 1, width: '51ch' }} variant="outlined">
-          <InputLabel>{'Description'}</InputLabel>
-          <OutlinedInput
-            //style={{ minHeight: 200}}
-            disabled
-            multiline
-            id="outlined-adornment-description"
-            value={userData?.companyData?.description}
-            onChange={handleChange('description')}
-            label="Description"
-          />
-        </FormControl>
-        <div>
-        <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+        <TextField
+            style={{width: '51ch', marginTop: 16, alignSelf: 'center', marginLeft: 3}}
+          id="outlined-select-currency"
+          select
+          label="Technology"
+          value={values.buyerOrSeller}
+          onChange={handleChange('tech')}
+        >
+            <MenuItem key={"Direct Removal"} value={'Direct Removal'}>
+              {"Direct Removal"}
+            </MenuItem>
+            <MenuItem key={"BEECS"} value={"BEECS"}>
+              {"BEECS"}
+            </MenuItem>
+            <MenuItem key={"any"} value={"any"}>
+              {"Any"}
+            </MenuItem>
+        </TextField>
+        <div><FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
           <InputLabel>{'Amount'}</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="start">tons</InputAdornment>}
@@ -169,6 +130,7 @@ function ListingScreen({setActiveProfileIndex}) {
               {"One-time"}
             </MenuItem>
         </TextField>
+        </div>
         </div>
         <div>
         <TextField
@@ -211,7 +173,6 @@ function ListingScreen({setActiveProfileIndex}) {
     const db = getDatabase();
     const hash = uuid()
     values.company_id = userData.companyData.companyId
-    values.tech = userData.companyData.technology
     var reference = ref(db, 'new_listings/' + hash);
     set(reference, values);
     reference = ref(db, 'users/' + user.uid + '/listings/' + hash);
@@ -221,7 +182,7 @@ function ListingScreen({setActiveProfileIndex}) {
         tons: 0,
         price: 0,
         type: 'market',
-        order: 'sell',
+        order: 'buy',
         monthly: false,
         company_id: ''
       })
@@ -231,4 +192,4 @@ function ListingScreen({setActiveProfileIndex}) {
     );
   }
   
-  export default ListingScreen;
+  export default PurchaseScreen;
