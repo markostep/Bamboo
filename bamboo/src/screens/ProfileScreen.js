@@ -23,6 +23,8 @@ import "./Register.css";
 import "./Reset.css";
 import SellScreen from './SellScreen';
 import { useAuthentication } from '../components/utils/userData';
+import HistoryScreen from './HistoryScreen';
+import { Switch } from '@mui/material';
 //import { useUserData } from '../components/utils/userData';
 
 const technologies = [
@@ -237,6 +239,8 @@ function ProfileScreen() {
       
     }, [user, loading]);
 
+    const [filledSelected, setFilledSelected] = useState(false)
+
     //const [userData, setUserData] = React.useState({});
 
     /*get(ref(db,'users/' + user.uid).then((snapshot) => {
@@ -249,11 +253,12 @@ function ProfileScreen() {
       <div className="dashboard" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'left'}}>
          
           Logged in as
-           
+          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+           <div style={{marginLeft: 50}}>
           {!userData?.companyData && <div style={{color: 'gray', display: 'flex'}}>
             <h1>{userData?.name}</h1>
             </div>}
-           {userData?.companyData && <div style={{color: 'gray', marginBottom: 0, height: 110}}>
+           {userData?.companyData && <div style={{color: 'gray', marginBottom: 0, height: 80, marginTop: -20}}>
             <h1>{userData?.companyData.companyName}</h1>
                </div>}
             {userData?.companyData && <div style={{color: 'gray', marginTop: 0}}>{userData?.companyData.location}</div>}
@@ -261,7 +266,10 @@ function ProfileScreen() {
            {userData?.companyData && userData?.companyData.buyerOrSeller == "Seller" && <div style={{color: 'gray'}}>{userData?.companyData.technology}</div>}
            {userData?.companyData && userData?.companyData.buyerOrSeller == "Seller" && <div style={{color: 'gray'}}>{userData?.companyData.reserves + ' tons/yr'}</div>}
            {userData?.companyData && <div style={{color: 'gray'}}>{userData?.companyData.description}</div>}
-           {userData?.companyData && <div style={{color: 'gray', display: 'flex', marginTop: 50}}>
+           </div>
+
+           <div style={{marginRight: 150}}>
+           {userData?.companyData && <div style={{color: 'gray', display: 'flex', marginTop: 70}}>
             {userData?.name}
             </div>}
            <div style={{color: 'gray', marginBottom: 50}}>{user?.email}</div>
@@ -271,7 +279,15 @@ function ProfileScreen() {
                }}>
             Logout
            </button>
-         
+           </div>
+           </div>
+           {filledSelected && <p1 style={{color: 'gray', fontSize: 20}}>Filled Orders</p1>}
+           {!filledSelected && <p1 style={{color: 'gray', fontSize: 20}}>Open Orders</p1>}
+           <Switch {...'Filled Orders'} value={filledSelected} onChange={() => {setFilledSelected(!filledSelected)}} />
+           <div style={{width: '100%', height: 1, backgroundColor: 'lightgray'}}></div>
+            <HistoryScreen filledSelected={filledSelected} style={{height: '50%', width:'100%'}}>
+
+            </HistoryScreen>
        </div>
     );
   }
