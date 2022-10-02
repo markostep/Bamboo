@@ -16,6 +16,7 @@ import Register from './screens/Register';
 import Login from './screens/Login';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ListingScreen from './screens/ListingScreen';
+import PurchaseScreen from './screens/PurchaseScreen';
 
 function App() {
   const [value, setValue] = React.useState(1);
@@ -33,7 +34,7 @@ function App() {
         <div style={{backgroundColor: 'white', width: '100%', justifyContent: 'space-between', display: 'flex', height: 100}}>
           <h1 style={{color: '#02cf73', backgroundColor: 'white', marginLeft: 10, width: 300, alignSelf: 'center'}}>Bamboo</h1>
           <GiBamboo size={70} color='#02cf73' style={{alignSelf: 'center'}}></GiBamboo>
-          <TextField id="outlined-basic" label="Search" variant="outlined" style={{width: 1000, alignSelf: 'center', marginLeft: 50}} 
+          <TextField id="outlined-basic" label="Search" variant="outlined" style={{width: 800, alignSelf: 'center', marginLeft: 50}} 
             value={seachBarValue}
             onChange={handleChange}
             onKeyDown={(event) => {
@@ -44,7 +45,7 @@ function App() {
               }
             }}/>
           <Tabs
-            style={{width: 400, alignSelf: 'center', marginLeft: 150}}
+            style={{width: 400, alignSelf: 'center', marginLeft: 0}}
             defaultValue={value}
             textColor="primary"
             indicatorColor="primary"
@@ -53,10 +54,11 @@ function App() {
             }}
             >
               <Tab label="Buy"/>
+              <Tab label="Purchase"/>
               <Tab label="Sell"/>
               <Tab label="Calculate"/>
           </Tabs>
-          <IconButton style={{alignSelf: 'center', marginRight: 20}} onClick={() => {setValue(3)}}>
+          <IconButton style={{alignSelf: 'center', marginRight: 20}} onClick={() => {setValue(4)}}>
           <IoMdPerson color='lightgray' size={50}> </IoMdPerson>
           </IconButton>
           
@@ -83,13 +85,17 @@ function App() {
 
       </BuyScreen>}
       {value == 1 &&
+      <PurchaseScreen>
+
+      </PurchaseScreen>}
+      {value == 2 &&
       <ListingScreen>
 
       </ListingScreen>}
-      {value == 2 &&
+      {value == 3 &&
       <CalculateScreen>
       </CalculateScreen>}
-      {value == 3 &&
+      {value == 4 &&
       <ProfileScreen>
 
       </ProfileScreen>
