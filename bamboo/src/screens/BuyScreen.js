@@ -322,7 +322,7 @@ function BuyScreen() {
 
                 <div style={{ justifyContent: 'right', width: '50%', alignSelf: 'flex-start', marginTop: 35}}>
                 <p style={{color: 'gray', fontSize: 20}}>
-                    {companies?.Seller[list[index]?.company_id]?.description ? companies?.Seller[list[index]?.company_id]?.description : "This company hasn't added a description yet!"}
+                    {companies?.Seller[list[index]?.company_id]?.description ?? companies?.Buyer[list[index]?.company_id]?.description}
                 </p>
                 </div>
                 {/*<ListItemText style={{color: 'black'}} primary={`Carbon Company ${list[index]?.company_id}`} />*/}

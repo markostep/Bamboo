@@ -90,7 +90,7 @@ function FuelScreen({setActiveIndex}) {
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
         <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
-          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint: Fuel Combustion</h3>
         </div>
         </header>
       </div>
@@ -186,7 +186,7 @@ function DrivingScreen({setActiveIndex}) {
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
         <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
-          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint: Driving</h3>
         </div>
         </header>
       </div>
@@ -316,7 +316,7 @@ function ShippingScreen({setActiveIndex}) {
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
         <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
-          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint: Shipping</h3>
         </div>
         </header>
       </div>
@@ -445,7 +445,7 @@ function FlightsScreen({setActiveIndex}) {
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
         <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
-          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint: Flying</h3>
         </div>
         </header>
       </div>
@@ -583,7 +583,7 @@ function ElectricityScreen({setActiveIndex}) {
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
         <div style={{display: 'flex', flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'}}>
-          <h3 style={{color: 'gray'}}>Estimate your Footprint</h3>
+          <h3 style={{color: 'gray'}}>Estimate your Footprint: Electricity</h3>
         </div>
         </header>
       </div>
