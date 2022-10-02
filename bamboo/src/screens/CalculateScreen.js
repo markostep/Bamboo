@@ -17,11 +17,36 @@ import { auth, logInWithEmailAndPassword, signInWithGoogle, db, logout, register
 import { useAuthState } from "react-firebase-hooks/auth";
 
 
+const CalculateScreen = () => {
+      const [activeIndex, setActiveIndex] = React.useState(1);
 
+      return(
+        <>
+            {activeIndex == 1 &&
+            <FuelScreen setActiveIndex={setActiveIndex}>
+            </FuelScreen>}
+            {activeIndex == 2 &&
+            <DrivingScreen setActiveIndex={setActiveIndex}>
+            </DrivingScreen>}
+            {activeIndex == 3 &&
+            <ShippingScreen setActiveIndex={setActiveIndex}>
+            </ShippingScreen>}
+            {activeIndex == 4 &&
+            <FlightsScreen setActiveIndex={setActiveIndex}>
+            </FlightsScreen>}
+            {activeIndex == 5 &&
+            <ElectricityScreen setActiveProfileIndex={setActiveIndex}>
+            </ElectricityScreen>}
+            {activeIndex == 6 &&
+            <CompleteScreen>
+            </CompleteScreen>}
+        </>
+      );
+}
 
 
 // Fuel Combustion
-function CalculateScreen({setActiveProfileIndex}) {
+function FuelScreen({setActiveIndex}) {
     const [userData, setUserData] = React.useState({})
 
     const [user, loading, error] = useAuthState(auth);
@@ -47,8 +72,6 @@ function CalculateScreen({setActiveProfileIndex}) {
         amount: 0,
       });
 
-      const [activeIndex, setActiveIndex] = React.useState(0);
-
       const handleChange =
     (prop) => (event) => {
       setValues({ ...values, [prop]: event.target.value });
@@ -62,7 +85,7 @@ function CalculateScreen({setActiveProfileIndex}) {
 
     return (
         <>
-        {activeIndex == 0 &&
+        {
     <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
@@ -99,7 +122,8 @@ function CalculateScreen({setActiveProfileIndex}) {
     setValues({
         amount: 0
       })
-   }}>{'Submit'}</Button>
+    setActiveIndex(2)
+   }}>{'Next'}</Button>
     </div>}
     </>
     );
@@ -112,9 +136,9 @@ function CalculateScreen({setActiveProfileIndex}) {
 
 
 
-/*
+
 // Driving
-function CalculateScreen({setActiveProfileIndex}) {
+function DrivingScreen({setActiveIndex}) {
     const [userData, setUserData] = React.useState({})
 
     const [user, loading, error] = useAuthState(auth);
@@ -143,7 +167,6 @@ function CalculateScreen({setActiveProfileIndex}) {
         year: ''
       });
 
-      const [activeIndex, setActiveIndex] = React.useState(0);
 
       const handleChange =
     (prop) => (event) => {
@@ -158,7 +181,7 @@ function CalculateScreen({setActiveProfileIndex}) {
 
     return (
         <>
-        {activeIndex == 0 &&
+        {
     <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
@@ -189,6 +212,8 @@ function CalculateScreen({setActiveProfileIndex}) {
             label="Location"
           />
         </FormControl>
+        </div>
+        <div>
         <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
           <InputLabel>Year</InputLabel>
           <OutlinedInput
@@ -199,8 +224,8 @@ function CalculateScreen({setActiveProfileIndex}) {
             label="Location"
           />
         </FormControl>
-      </div>
-      <div>
+      
+      
       <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
           <InputLabel>Distance</InputLabel>
           <OutlinedInput
@@ -230,23 +255,22 @@ function CalculateScreen({setActiveProfileIndex}) {
         model: '',
         year: ''
       })
-   }}>{'Submit'}</Button>
+    setActiveIndex(3)
+   }}>{'Next'}</Button>
     </div>}
     </>
     );
   }
 
-  export default CalculateScreen;
-*/
 
 
 
 
 
 
-/*
+
 // Shipping
-function CalculateScreen({setActiveProfileIndex}) {
+function ShippingScreen({setActiveIndex}) {
     const [userData, setUserData] = React.useState({})
 
     const [user, loading, error] = useAuthState(auth);
@@ -274,8 +298,6 @@ function CalculateScreen({setActiveProfileIndex}) {
         transport_method: 'Truck'
       });
 
-      const [activeIndex, setActiveIndex] = React.useState(0);
-
       const handleChange =
     (prop) => (event) => {
       setValues({ ...values, [prop]: event.target.value });
@@ -289,7 +311,7 @@ function CalculateScreen({setActiveProfileIndex}) {
 
     return (
         <>
-        {activeIndex == 0 &&
+        {
     <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
@@ -300,7 +322,7 @@ function CalculateScreen({setActiveProfileIndex}) {
       </div>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
       <div>
-      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 1, marginRight: 0, marginLeft: 0 }} variant="outlined">
           <InputLabel>{'Weight'}</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="weight">lbs</InputAdornment>}
@@ -310,7 +332,7 @@ function CalculateScreen({setActiveProfileIndex}) {
             label="Location"
           />
       </FormControl>
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+      <FormControl sx={{ m: 1, width: '25ch', marginLeft: 2 }} variant="outlined">
           <InputLabel>Distance</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="distance">miles</InputAdornment>}
@@ -359,14 +381,13 @@ function CalculateScreen({setActiveProfileIndex}) {
         distance: 0,
         transport_method: 'Truck'
       })
-   }}>{'Submit'}</Button>
+      setActiveIndex(4)
+   }}>{'Next'}</Button>
     </div>}
     </>
     );
   }
 
-  export default CalculateScreen;
-*/
 
 
 
@@ -376,9 +397,8 @@ function CalculateScreen({setActiveProfileIndex}) {
 
 
 
-/*
 // Flights
-function CalculateScreen({setActiveProfileIndex}) {
+function FlightsScreen({setActiveIndex}) {
     const [userData, setUserData] = React.useState({})
 
     const [user, loading, error] = useAuthState(auth);
@@ -407,8 +427,6 @@ function CalculateScreen({setActiveProfileIndex}) {
         num_passengers: 1
       });
 
-      const [activeIndex, setActiveIndex] = React.useState(0);
-
       const handleChange =
     (prop) => (event) => {
       setValues({ ...values, [prop]: event.target.value });
@@ -422,7 +440,7 @@ function CalculateScreen({setActiveProfileIndex}) {
 
     return (
         <>
-        {activeIndex == 0 &&
+        {
     <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
@@ -433,7 +451,7 @@ function CalculateScreen({setActiveProfileIndex}) {
       </div>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
       <div>
-      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 1, marginRight: 0, marginLeft: 2 }} variant="outlined">
           <InputLabel>{'Departure Airport'}</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="start"></InputAdornment>}
@@ -443,7 +461,7 @@ function CalculateScreen({setActiveProfileIndex}) {
             label="Location"
           />
       </FormControl>
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+      <FormControl sx={{ m: 1, width: '25ch', marginLeft: 2, marginBottom: 2 }} variant="outlined">
           <InputLabel>Destination Airport</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="start"></InputAdornment>}
@@ -453,8 +471,10 @@ function CalculateScreen({setActiveProfileIndex}) {
             label="Location"
           />
         </FormControl>
+        </div>
+        <div>
         <TextField
-            style={{width: values.type=='limit' ? '25ch' : '51ch', marginTop: 16, alignSelf: 'center'}}
+            style={{width: values.type=='limit' ? '25ch' : '25ch', marginTop: 0, alignSelf: 'center', marginLeft: 3}}
           id="outlined-select-currency"
           select
           label="Round trip?"
@@ -468,16 +488,16 @@ function CalculateScreen({setActiveProfileIndex}) {
               {"No"}
             </MenuItem>
         </TextField>
-        </div>
-        <div>
-        <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+        
+        
+        <FormControl sx={{ m: 1, width: '25ch', marginTop: 0, marginRight: 0, marginLeft: 2 }} variant="outlined">
           <InputLabel>{'Number of Passengers'}</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="start"></InputAdornment>}
             id="outlined-adornment-location"
             value={values.num_passengers}
             onChange={handleChange('num_passengers')}
-            label="Location"
+            label="Number of Passengers"
           />
         </FormControl>
         </div>
@@ -499,14 +519,13 @@ function CalculateScreen({setActiveProfileIndex}) {
         round_trip: 'No',
         num_passengers: 1
       })
-   }}>{'Submit'}</Button>
+    setActiveIndex(5)
+   }}>{'Next'}</Button>
     </div>}
     </>
     );
   }
 
-  export default CalculateScreen;
-*/
 
 
 
@@ -515,9 +534,8 @@ function CalculateScreen({setActiveProfileIndex}) {
 
 
 
-/*
 // Electricity
-function CalculateScreen({setActiveProfileIndex}) {
+function ElectricityScreen({setActiveIndex}) {
 
     const [userData, setUserData] = React.useState({})
 
@@ -547,8 +565,6 @@ function CalculateScreen({setActiveProfileIndex}) {
         country: 'USA'
       });
 
-      const [activeIndex, setActiveIndex] = React.useState(0);
-
       const handleChange =
     (prop) => (event) => {
       setValues({ ...values, [prop]: event.target.value });
@@ -562,7 +578,7 @@ function CalculateScreen({setActiveProfileIndex}) {
 
     return (
         <>
-        {activeIndex == 0 &&
+        {
     <div style={{backgroundColor: 'white', width: '100%', height: 910}}>
     <div style={{backgroundColor: 'white', width: '100%'}}>
         <header style={{justifyContent: 'flex-start'}}>
@@ -573,7 +589,7 @@ function CalculateScreen({setActiveProfileIndex}) {
       </div>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', backgroundColor: 'white', width: '100%', justifyContent: 'center' }}>
       <div>
-      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 1, marginLeft: -1 }} variant="outlined">
           <InputLabel>{'State'}</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="start"></InputAdornment>}
@@ -583,7 +599,7 @@ function CalculateScreen({setActiveProfileIndex}) {
             label="Location"
           />
       </FormControl>
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+      <FormControl sx={{ m: 1, width: '25ch', marginTop: 2 }} variant="outlined">
           <InputLabel>Country</InputLabel>
           <OutlinedInput
           disabled
@@ -595,7 +611,7 @@ function CalculateScreen({setActiveProfileIndex}) {
         </FormControl>
         </div>
         <div>
-        <FormControl sx={{ m: 1, width: '25ch', marginTop: 2, marginRight: 2, marginLeft: -1 }} variant="outlined">
+        <FormControl sx={{ m: 1, width: '51ch', marginTop: 2, marginRight: 2, marginLeft: 0 }} variant="outlined">
           <InputLabel>{'Amount'}</InputLabel>
           <OutlinedInput
           endAdornment={<InputAdornment position="start">Mwh</InputAdornment>}
@@ -624,14 +640,21 @@ function CalculateScreen({setActiveProfileIndex}) {
         state: '',
         country: 'USA'
       })
+    setActiveIndex(6)
    }}>{'Submit'}</Button>
     </div>}
     </>
     );
   }
 
-  export default CalculateScreen;
-*/
+  const CompleteScreen = () => {
+      return(
+        <h3 style={{backgroundColor: "primary"}}>
+            Thank you for filling out our carbon footprint calculator and taking a right step towards a cleaner planet!
+        </h3>
+
+      );
+  }
 
 
 

@@ -78,7 +78,7 @@ function HistoryScreen({filledSelected}) {
 
     setTimeout(function(){
         setLoaded4(true)
-    }, 100); 
+    }, 500); 
 
 
     useEffect(() => {
@@ -305,7 +305,7 @@ function HistoryScreen({filledSelected}) {
                 <div style={{ justifyContent: 'left', width: '80%', alignSelf: 'flex-start', marginLeft: 20}}>
                 <div style={{flexDirection: 'row', display: 'flex'}}>
                 </div>
-                <h3 style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{filled_orders[index]?.order1?.tech != 'any' ? list[index]?.tech : "Any Technology"}</h3>
+                <h3 style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{filled_orders[index]?.order1?.tech != 'any' ? filled_orders[index]?.tech : "Any Technology"}</h3>
                 <h3 style={{color: 'gray', fontSize: 30}}>{filled_orders[index]?.monthly ? 'Monthly Contract' : 'One-time Contract'}</h3>
                 </div>
 
