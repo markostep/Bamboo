@@ -335,8 +335,8 @@ import concurrent.futures
 import threading
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-    executor.submit(engine, range(30))
-    executor.submit(calc_emissions, range(30))
+    executor.submit(engine)
+    executor.submit(calc_emissions)
 
 # eng = threading.Thread(target=engine)
 # emissions = threading.Thread(target=calc_emissions)
