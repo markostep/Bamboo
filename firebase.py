@@ -9,6 +9,8 @@ default_app = initialize_app(cred, {'databaseURL': 'https://bamboo-52389-default
 
 head = db.reference('/')
 companies = db.reference('/companies/')
+buyers = db.reference('/companies/Buyer')
+sellers = db.reference('/companies/Seller')
 
 new_listings = db.reference('/new_listings/')
 # sells = db.reference('/listings/sells/')
@@ -137,36 +139,35 @@ def rate(tech, price='average'):
 
 
 
-
-
 def update_book():
     for order_id,fields in get(new_listings).items():
-        fields['monthly'] = fields.get('monthly', False)
-        fields['tech'] = fields.get('tech', 'any')
-        if fields['type'] == 'market':
-            fields['price'] = MIN_SELL if fields['order'] == 'sell' else MAX_BUY
+        if fields['order'] == 'buy' and fields['company_id'] in get(buyers).keys() or fields['order'] == 'sell' and fields['company_id'] in get(sellers).keys():
+            fields['monthly'] = fields.get('monthly', False)
+            fields['tech'] = fields.get('tech', 'any')
+            if fields['type'] == 'market':
+                fields['price'] = MIN_SELL if fields['order'] == 'sell' else MAX_BUY
 
-        fields['price'] = float(fields['price'])
-        fields['tons'] = float(fields['tons'])
-        if fields['order'] == 'sell':
-            fields['rating'] = rate(fields['tech'], fields['price'] if fields['type'] == 'limit' else 'average')
+            fields['price'] = float(fields['price'])
+            fields['tons'] = float(fields['tons'])
+            if fields['order'] == 'sell':
+                fields['rating'] = rate(fields['tech'], fields['price'] if fields['type'] == 'limit' else 'average')
 
-        if fields['tech'] == 'any' and fields['order'] == 'buy':
-            for tech in ['dr', 'beecs']:
-                ref = eval('_'.join(['monthly' if fields['monthly'] else 'onetime', tech, fields['order']]) + '_book')
+            if fields['tech'] == 'any' and fields['order'] == 'buy':
+                for tech in ['dr', 'beecs']:
+                    ref = eval('_'.join(['monthly' if fields['monthly'] else 'onetime', tech, fields['order']]) + '_book')
+                    add({order_id: fields}, ref)
+            else:
+                ref = eval('_'.join(['monthly' if fields['monthly'] else 'onetime', 'dr' if fields['tech'] == 'Direct Removal' else 'beecs', fields['order']]) + '_book')
                 add({order_id: fields}, ref)
-        else:
-            ref = eval('_'.join(['monthly' if fields['monthly'] else 'onetime', 'dr' if fields['tech'] == 'Direct Removal' else 'beecs', fields['order']]) + '_book')
-            add({order_id: fields}, ref)
 
-        add({order_id:
-                dict({
-                    'monthly': fields['monthly'],
-                    'tons': fields['tons'],
-                    'tech': fields['tech'],
-                    'type': fields['type']
-                }, **({'price': fields['price']} if fields['type'] == 'limit' else {}))
-            }, db.reference('/companies/{}/{}/open_orders/'.format(fields['order'].capitalize()+'er', fields['company_id'])))
+            add({order_id:
+                    dict({
+                        'monthly': fields['monthly'],
+                        'tons': fields['tons'],
+                        'tech': fields['tech'],
+                        'type': fields['type']
+                    }, **({'price': fields['price']} if fields['type'] == 'limit' else {}))
+                }, db.reference('/companies/{}/{}/open_orders/'.format(fields['order'].capitalize()+'er', fields['company_id'])))
 
         remove(order_id, new_listings)
 
@@ -259,6 +260,9 @@ def engine():
 
 
 def calc_emissions():
+    if get(new_footprints) is None:
+        return
+
     for user, data in get(new_footprints).items():
         count = 0
         footprints = get(db.reference(f'/users/{user}/footprints/'))
@@ -325,7 +329,7 @@ dummy_sells = {
 
 
 
-# engine()
+engine()
 calc_emissions()
 
 
