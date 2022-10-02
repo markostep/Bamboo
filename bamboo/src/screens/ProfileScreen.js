@@ -246,18 +246,25 @@ function ProfileScreen() {
     //alert(userData)
 
     return (
-      <div className="dashboard" style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+      <div className="dashboard" style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'left'}}>
          
           Logged in as
-           <div style={{color: 'gray', display: 'flex', justifyContent: 'left'}}>
-               <h1>{userData?.name}</h1>
-            </div>
-           {userData?.companyData && <div style={{color: 'gray'}}>{userData?.companyData.companyName}</div>}
-           {userData?.companyData && <div style={{color: 'gray'}}>{userData?.companyData.description}</div>}
-           {userData?.companyData && <div style={{color: 'gray'}}>{userData?.companyData.location}</div>}
+           
+          {!userData?.companyData && <div style={{color: 'gray', display: 'flex'}}>
+            <h1>{userData?.name}</h1>
+            </div>}
+           {userData?.companyData && <div style={{color: 'gray', marginBottom: 0, height: 110}}>
+            <h1>{userData?.companyData.companyName}</h1>
+               </div>}
+            {userData?.companyData && <div style={{color: 'gray', marginTop: 0}}>{userData?.companyData.location}</div>}
+            {userData?.companyData && <div style={{color: 'gray'}}>{userData?.companyData.buyerOrSeller}</div>}
            {userData?.companyData && userData?.companyData.buyerOrSeller == "Seller" && <div style={{color: 'gray'}}>{userData?.companyData.technology}</div>}
-           {userData?.companyData && userData?.companyData.buyerOrSeller == "Seller" && <div style={{color: 'gray'}}>{userData?.companyData.reserves}</div>}
-           <div style={{color: 'gray'}}>{user?.email}</div>
+           {userData?.companyData && userData?.companyData.buyerOrSeller == "Seller" && <div style={{color: 'gray'}}>{userData?.companyData.reserves + ' tons/yr'}</div>}
+           {userData?.companyData && <div style={{color: 'gray'}}>{userData?.companyData.description}</div>}
+           {userData?.companyData && <div style={{color: 'gray', display: 'flex', marginTop: 50}}>
+            {userData?.name}
+            </div>}
+           <div style={{color: 'gray', marginBottom: 50}}>{user?.email}</div>
            <button className="dashboard__btn" onClick={async() => {
                logout()
                 setActiveIndex(1)

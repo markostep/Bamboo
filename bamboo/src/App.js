@@ -15,6 +15,7 @@ import Dashboard from './screens/Dashboard';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ListingScreen from './screens/ListingScreen';
 
 function App() {
   const [value, setValue] = React.useState(1);
@@ -82,9 +83,9 @@ function App() {
 
       </BuyScreen>}
       {value == 1 &&
-      <SellScreen>
+      <ListingScreen>
 
-      </SellScreen>}
+      </ListingScreen>}
       {value == 2 &&
       <CalculateScreen>
       </CalculateScreen>}
