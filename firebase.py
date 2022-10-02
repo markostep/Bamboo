@@ -80,7 +80,8 @@ def update_book():
     for order_id,fields in get(new_listings).items():
         fields['monthly'] = fields.get('monthly', False)
         fields['tech'] = fields.get('tech', 'any')
-        fields['price'] = fields.get('price', MIN_SELL if fields['order'] == 'sell' else MAX_BUY)
+        if fields['type'] == 'market':
+            fields['price'] = MIN_SELL if fields['order'] == 'sell' else MAX_BUY
 
         if fields['tech'] == 'any' and fields['order'] == 'buy':
             for tech in ['dr', 'beecs']:

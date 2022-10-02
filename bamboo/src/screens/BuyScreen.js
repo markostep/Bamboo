@@ -22,12 +22,20 @@ function renderRow(props) {
 
 
 
-const [buyList, sellList] = React.useState({})
+const [monthly_dr_buy_book, set_monthly_dr_buy_book] = React.useState({})
+const [monthly_dr_sell_book, set_monthly_dr_sell_book] = React.useState({})
+const [monthly_beecs_buy_book, set_monthly_beecs_buy_book] = React.useState({})
+const [monthly_beecs_sell_book, set_monthly_beecs_sell_book] = React.useState({})
+const [onetime_dr_buy_book, set_onetime_dr_buy_book] = React.useState({})
+const [onetime_dr_sell_book, set_onetime_dr_sell_book] = React.useState({})
+const [onetime_beecs_buy_book, set_onetime_beecs_buy_book] = React.useState({})
+const [onetime_beecs_sell_book, set_onetime_beecs_sell_book] = React.useState({})
+
 const dbRef = ref(getDatabase());
 get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_monthly_beecs_buy_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -38,7 +46,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/monthly/direct_removal/buy`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_monthly_dr_buy_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -49,7 +57,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/onetime/beecs/buy`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_onetime_beecs_buy_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -60,7 +68,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/onetime/direct_removal/buy`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_onetime_dr_buy_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -72,7 +80,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/monthly/beecs/sell`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_monthly_beecs_sell_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -83,7 +91,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/monthly/direct_removal/sell`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_monthly_dr_sell_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -94,7 +102,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/onetime/beecs/sell`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_onetime_beecs_sell_book(snapshot.val())
     } else {
         console.log("No data available");
     }
@@ -105,7 +113,7 @@ get(child(dbRef, `books/monthly/beecs/buy`)).then((snapshot) => {
     get(child(dbRef, `books/onetime/direct_removal/sell`)).then((snapshot) => {
     if (snapshot.exists()) {
         console.log(snapshot.val());
-        // setUserData(snapshot.val())
+        set_onetime_dr_sell_book(snapshot.val())
     } else {
         console.log("No data available");
     }
