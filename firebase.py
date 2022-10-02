@@ -44,7 +44,7 @@ def get(ref=head, sort_by=None, descending=False):
         return ref.get()
     else:
         arr = ref.order_by_child(sort_by).get()
-        return arr if not descending else collections.OrderedDict(reversed(list(arr.items())))
+        return arr if not descending or arr is None else collections.OrderedDict(reversed(list(arr.items())))
 
 # def getUserIds():
 #     return set(get(ref=users).keys())
@@ -75,6 +75,64 @@ def remove(key, ref=head):
 
 
 
+def rate(tech, price='average'):
+    '''
+    Returns a rating out of 5 based on the given technology and price
+    Technologies are graded based on their permanence, additionality, maturity, commercializability, scalability, and reliability
+
+    Direct Removal: https://www.wri.org/insights/direct-air-capture-resource-considerations-and-costs-carbon-removal
+        * Currently considered a 6/9 “technology readiness level”
+        * Typical prices $250-600 now, $150-200 in next 5-10 years
+        * Reliable, permanent storage
+        * Not yet very commercializable
+        # Fairly scalable
+        * (probably) decent additionality
+
+    BEECS:  https://www.american.edu/sis/centers/carbon-removal/fact-sheet-bioenergy-with-carbon-capture-and-storage-beccs.cfm
+            https://psci.princeton.edu/tips/2020/11/15/preventing-climate-change-with-beccs-bioenergy-with-carbon-capture-and-storage
+        * Not scalable
+        * Maturity is moderate
+        * Commercializability is so-so (maybe 3/5?)
+        * Permanence eh (maybe 2/5?)
+        * Cost: $20-100
+    '''
+    weights = {
+        'price': .25,
+        'permanence': .2,
+        'additionality': .05,
+        'maturity': .1,
+        'commercializability': .1,
+        'scalability': .15,
+        'reliability': .15
+    }
+
+    if tech == 'Direct Removal':
+        scores = {
+            'price': max(5 - (price/400) * 2.5, 0) if price != 'average' else 2.5,
+            'permanence': 4.5,
+            'additionality': 3,
+            'maturity': 3.33,
+            'commercializability': 2,
+            'scalability': 3,
+            'reliability': 4
+        }
+
+    elif tech == 'BEECS':
+        scores = {
+            'price': max(5 - (price/75) * 2.5, 0) if price != 'average' else 2.5,
+            'permanence': 2,
+            'additionality': 2.5,
+            'maturity': 3,
+            'commercializability': 3,
+            'scalability': 1.5,
+            'reliability': 2
+        }
+
+    return sum([weights[category]*scores[category] for category in weights.keys()])
+
+
+
+
 
 def update_book():
     for order_id,fields in get(new_listings).items():
@@ -82,6 +140,11 @@ def update_book():
         fields['tech'] = fields.get('tech', 'any')
         if fields['type'] == 'market':
             fields['price'] = MIN_SELL if fields['order'] == 'sell' else MAX_BUY
+
+        fields['price'] = float(fields['price'])
+        fields['tons'] = float(fields['tons'])
+        if fields['order'] == 'sell':
+            fields['rating'] = rate(fields['tech'], fields['price'] if fields['type'] == 'limit' else 'average')
 
         if fields['tech'] == 'any' and fields['order'] == 'buy':
             for tech in ['dr', 'beecs']:
@@ -100,12 +163,15 @@ def engine():
     '''
     if get(new_listings):
         update_book()
+        return
 
     for buy_book, sell_book in all_books_paired:
-        buys,sells = list(get(buy_book, sort_by='price', descending=True).items()), list(get(sell_book, sort_by='price').items())
+        buys,sells = get(buy_book, sort_by='price', descending=True), get(sell_book, sort_by='price')
 
         if buys is None or sells is None:
             continue
+
+        buys,sells = list(buys.items()), list(sells.items())
 
 
         i = j = 0
