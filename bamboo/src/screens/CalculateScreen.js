@@ -125,7 +125,7 @@ function CalculateScreen({setActiveProfileIndex}) {
     const db = getDatabase();
     const hash = uuid()
     values.type = 'Electricity'
-    var reference = ref(db, 'users/' + user.uid + '/footprint/' + hash);
+    var reference = ref(db, 'users/' + user.uid + '/footprints/' + hash);
     set(reference, values);
     reference = ref(db, '/uncalculated_emissions/' + user.uid);
     set(reference, {uid:hash});
