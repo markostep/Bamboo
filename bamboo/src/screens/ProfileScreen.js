@@ -188,10 +188,11 @@ function ProfileScreen() {
 
   //var userData = {}
   function Dashboard({setActiveIndex}) {
+
     const [userData, setUserData] = React.useState({})
     //const { userDataHook } = useAuthentication();
     //var {userData} = useUserData()
-    console.log('from profile')
+    // console.log('from profile')
     //console.log(userData)
     const [user, loading, error] = useAuthState(auth);
     const [name, setName] = useState("");
@@ -214,10 +215,10 @@ function ProfileScreen() {
     })*/
 
     const dbRef = ref(getDatabase());
-    console.log(user?.uid)
+    // console.log(user?.uid)
     get(child(dbRef, `users/${user?.uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
-        console.log(snapshot.val());
+        // console.log(snapshot.val());
         //setName(snapshot.val().name)
         setUserData(snapshot.val())
     } else {
@@ -226,6 +227,8 @@ function ProfileScreen() {
     }).catch((error) => {
     console.error(error);
     });
+
+
 
     useEffect(() => {
       if (loading) return;

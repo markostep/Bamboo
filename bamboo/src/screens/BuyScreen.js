@@ -1,4 +1,10 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
+// import { initializeApp } from 'firebase/app';
+// import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
+
+
 //import List from '@mui/material/List';
 //import ListItem from '@mui/material/ListItem';
 //import ListItemButton from '@mui/material/ListItemButton';
