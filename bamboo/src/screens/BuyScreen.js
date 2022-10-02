@@ -48,7 +48,9 @@ const listItems = numbers.map((number) =>
 );
   
 
+
 //var postData = []
+
 function BuyScreen() {
 
     const [monthly_dr_buy_book, set_monthly_dr_buy_book] = React.useState({})
@@ -266,13 +268,13 @@ function BuyScreen() {
             });*/
 
         const dbRef = ref(getDatabase());
-        get(dbRef, `companies/Seller/${companyId}/`).then((snapshot) => {
+        get(dbRef, `companies/Buyer/${companyId}/`).then((snapshot) => {
         if (snapshot.exists()) {
             console.log('snapshot here')
-            console.log(snapshot.val().companies.Seller[companyId]);
+            console.log(snapshot.val().companies.Buyer[companyId]);
             //setName(snapshot.val().name)
             //companyData = snapshot.val().companyData
-            return snapshot.val().companies.Seller[companyId]
+            return snapshot.val().companies.Buyer[companyId]
             //setValues({ ...values, ['company_id']: snapshot.val().companyData.companyId });
         } else {
             console.log("No data available");
@@ -292,13 +294,14 @@ function BuyScreen() {
                 <div style={{ justifyContent: 'left', width: '80%', alignSelf: 'flex-start', marginLeft: 20}}>
                 <div style={{flexDirection: 'row', display: 'flex'}}>
                 <h3 style={{color: 'black', marginBottom: -20}}>
-                {`${companies?.Seller[list[index]?.company_id]?.companyName}`}
+                {`${companies?.Seller[list[index]?.company_id]?.companyName ?? companies?.Buyer[list[index]?.company_id]?.companyName}`}
                 </h3>
                 <h3 style={{color: 'gray', marginBottom: -20}}>
-                {', ' + companies?.Seller[list[index]?.company_id]?.location}
+                {', ' + (companies?.Seller[list[index]?.company_id]?.location ?? companies?.Buyer[list[index]?.company_id]?.location)}
                 </h3>
                 </div>
                 <h3 style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{list[index]?.tech != 'any' ? list[index]?.tech : "Any Technology"}</h3>
+                <h3 style={{color: 'gray', fontSize: 30, marginBottom: -20}}>{list[index]?.order == 'buy' ? 'Buy' : 'Sell'}</h3>
                 <h3 style={{color: 'gray', fontSize: 30}}>{list[index]?.monthly ? 'Monthly Contract' : 'One-time Contract'}</h3>
                 {list[index]?.rating &&
                 <>
