@@ -1,6 +1,4 @@
 # Bamboo
-A carbon credit marketplace for permanent removal
-
 HackMIT Project Link: https://spectacle.hackmit.org/project/173
 
 Demo video: https://youtu.be/gmk8nwtwqiE
